@@ -16,9 +16,9 @@ Wrapper for IndexedDB for storing json objects mapped to URLs
         {name: 'basicTables'},
         // With primary key. All objects must have 'id' property
         {name: 'basicTables', primaryKey: 'id'},
-        // Every structure change on table must increase version
+        // Table version must increase on every structure change 
         {name: 'someUpdatedTable', primaryKey: 'id', version:2 },
-        // Table with 2 indexes. If needed for some custom workflow.
+        // Table with 2 indexes.
         {name: 'tableWithIndexes', primaryKey: 'id', version:1, indexes: ['timestamp,lastname', ['lastname', 'DOB']] },
         // Encrypts firstname and lastname when cryptoHelper is provided.
         // Note: No point to encrypt indexed fields when you need to query range
@@ -41,6 +41,7 @@ Wrapper for IndexedDB for storing json objects mapped to URLs
             //Error on database open
         }
     );
+
 
     //Some functions called after database is opened.
     function beforeRequestToServer(url) {
@@ -66,6 +67,9 @@ Wrapper for IndexedDB for storing json objects mapped to URLs
             }
         )
     }
+    
+    
+    
     //Not recommended in usual flow.
     function doOtherRequestsDirectlyOnTables(table) {
         myIdb.getAll(table).then( function (records) {
