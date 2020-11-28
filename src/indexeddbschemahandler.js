@@ -14,11 +14,29 @@ export class IndexedDBSchemaHandler {
   }
 
   constructor(name, tableDefinitions, generalSetup) {
-    this.name = name;
-    this.setDefaultValues();
+    if (this.checkBrowserSupport()) {
+      this.name = name;
+      this.setDefaultValues();
+      this.setGeneralSetup(generalSetup);
+      this.setTableDefinitions(tableDefinitions);
+    }
+  }
 
-    this.setGeneralSetup(generalSetup);
-    this.setTableDefinitions(tableDefinitions);
+  checkBrowserSupport() {
+    this.notSupportedMsg = null;
+    if (!('indexedDB' in window)) {
+      this.notSupportedMsg = 'This browser doesn\'t support IndexedDB';
+      return false;
+    }
+    if (!window.Promise) {
+      this.notSupportedMsg = 'This browser doesn\'t support Promises';
+      return false;
+    }
+    return true;
+  }
+
+  canIUse() {
+    return !this.notSupportedMsg;
   }
 
   setGeneralSetup(generalSetup) {
@@ -78,6 +96,9 @@ export class IndexedDBSchemaHandler {
   openDatabase() {
     let $this = this;
     return new Promise(function (resolve, reject) {
+      if (this.notSupportedMsg) {
+        reject(this.notSupportedMsg);
+      }
       var request = window.indexedDB.open($this.name, $this.totalVersion || null);
 
       request.onupgradeneeded = function (event) {

@@ -26,6 +26,10 @@ export default class IdbRequestHandler {
     this.indexedDbHandler =  new IndexedDBSchemaHandler(databaseName, tableDefinitions, generalSetup);
   }
 
+  canIUse() {
+    return this.indexedDbHandler.canIUse();
+  }
+
   openDatabase(callback) {
     let $this = this;
     let promise = new Promise(
