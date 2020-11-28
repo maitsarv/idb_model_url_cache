@@ -102,7 +102,7 @@ export default class IdbRequestHandler {
                 $this.urlMap[url].version = $this.indexedDbHandler.tables[$this.urlMap[url].table].version;
                 $this.urlMap[url].lastUpdate = timestamp;
                 $this.urlMap[url].enc = $this.indexedDbHandler.tables[$this.urlMap[url].table].encrypt;
-                $this.indexedDbHandler.addRecords($this.userTable, [$this.urlMap[url]]).then(
+                $this.indexedDbHandler.putRecords($this.userTable, [$this.urlMap[url]]).then(
                   function () {
                     resolve(result);
                   },

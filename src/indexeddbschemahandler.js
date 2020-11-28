@@ -365,7 +365,13 @@ export class IndexedDBSchemaHandler {
     }
   }
 
-  addRecords(table, records, ignoreDuplicateKey) {
+  putRecordsToStore(store, records, ignoreDuplicateKey) {
+    for (let o = 0; o < records.length; o++) {
+      store.put(records[o]);
+    }
+  }
+
+  handleInsert (table, records, ignoreDuplicateKey, insertFunc) {
     let $this = this;
     return new Promise(function (resolve, reject) {
       if (!Array.isArray(records)) {
@@ -374,19 +380,27 @@ export class IndexedDBSchemaHandler {
 
       if ($this.cryptoHelper.encryptRecords && $this.tables[table].encrypt.length > 0) {
         $this.cryptoHelper.encryptRecords(records, $this.tables[table].encrypt).then(
-          function () {
-            let store = $this.getStore(table, "readwrite", resolve, reject);
-            $this.addRecordsToStore(store, records, ignoreDuplicateKey);
-          },
-          function (err) {
-            reject(err);
-          }
+            function () {
+              let store = $this.getStore(table, "readwrite", resolve, reject);
+              insertFunc(store, records, ignoreDuplicateKey);
+            },
+            function (err) {
+              reject(err);
+            }
         );
       } else {
         let store = $this.getStore(table, "readwrite", resolve, reject);
-        $this.addRecordsToStore(store, records, ignoreDuplicateKey);
+        insertFunc(store, records, ignoreDuplicateKey);
       }
     });
+  }
+
+  addRecords(table, records, ignoreDuplicateKey) {
+    this.handleInsert(table, records, false, this.addRecordsToStore())
+  }
+
+  putRecords(table, records) {
+    this.handleInsert(table, records, ignoreDuplicateKey, this.putRecordsToStore())
   }
 
   clear(table) {
