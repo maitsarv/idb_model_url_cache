@@ -396,11 +396,11 @@ export class IndexedDBSchemaHandler {
   }
 
   addRecords(table, records, ignoreDuplicateKey) {
-    this.handleInsert(table, records, ignoreDuplicateKey, this.addRecordsToStore)
+    return this.handleInsert(table, records, ignoreDuplicateKey, this.addRecordsToStore);
   }
 
   putRecords(table, records) {
-    this.handleInsert(table, records, false, this.putRecordsToStore)
+    return this.handleInsert(table, records, false, this.putRecordsToStore);
   }
 
   clear(table) {
