@@ -96,8 +96,8 @@ export class IndexedDBSchemaHandler {
   openDatabase() {
     let $this = this;
     return new Promise(function (resolve, reject) {
-      if (this.notSupportedMsg) {
-        reject(this.notSupportedMsg);
+      if ($this.notSupportedMsg) {
+        reject($this.notSupportedMsg);
       }
       var request = window.indexedDB.open($this.name, $this.totalVersion || null);
 
