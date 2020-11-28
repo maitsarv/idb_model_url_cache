@@ -75,8 +75,8 @@ export class IndexedDBSchemaHandler {
         tableDefinitions[t].encrypt = [];
       }
 
-      tableDefinitions[t].encrypt = tableDefinitions[t].encrypt || [];
-      tableDefinitions[t].decrypt = tableDefinitions[t].decrypt || [];
+      tableDefinitions[t].encrypt = tableDefinitions[t].encrypt && this.cryptoHelper ? tableDefinitions[t].encrypt : [];
+      tableDefinitions[t].decrypt = tableDefinitions[t].decrypt && this.cryptoHelper ? tableDefinitions[t].decrypt : [];
 
       this.tables[tableDefinitions[t].name] = tableDefinitions[t];
 
