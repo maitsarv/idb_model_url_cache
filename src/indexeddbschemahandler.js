@@ -85,7 +85,7 @@ export class IndexedDBSchemaHandler {
       this.tables[tableDefinitions[t].name].autoIncrement = false;
 
       if (!this.tables[tableDefinitions[t].name].primaryKey) {
-        this.tables[tableDefinitions[t].name].primaryKey = '';
+        //this.tables[tableDefinitions[t].name].primaryKey = '';
         this.tables[tableDefinitions[t].name].autoIncrement = true;
       }
     }
@@ -159,13 +159,13 @@ export class IndexedDBSchemaHandler {
       const def = this.tables[t];
       let store = null;
       if (!def.exists) {
-        store = this.db.createObjectStore(
-          def.name,
-          {
-            keyPath: def.primaryKey,
-            autoIncrement: def.autoIncrement
-          }
-          );
+        var options = {
+          autoIncrement: def.autoIncrement
+        }
+        if (def.primaryKey) {
+          options.keyPath = def.primaryKey;
+        }
+        store = this.db.createObjectStore(def.name, options);
       } else {
         store = request.transaction.objectStore(def.name);
         if (def.primaryKey && !this.areIndexesSame(store.keyPath, def.primaryKey)) {

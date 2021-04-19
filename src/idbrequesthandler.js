@@ -133,6 +133,9 @@ export default class IdbRequestHandler {
   }
 
   getAll(table) {
+    if (!this.indexedDbHandler.tables[table]) {
+      throw 'table ´' + table + '´ not found';
+    }
     return this.indexedDbHandler.getAll(table, this.indexedDbHandler.tables[table].enc);
   }
 
@@ -142,5 +145,9 @@ export default class IdbRequestHandler {
 
   deleteByPrimaryKey(table, ids) {
     return this.indexedDbHandler.deleteByPrimaryKey(table, ids);
+  }
+
+  getByKey(table, keyname, keyValues, valuesSorted) {
+    return this.indexedDbHandler.getByKey(table, keyname, keyValues, valuesSorted);
   }
 }
